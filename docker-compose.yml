@@ -2,7 +2,7 @@ version: '3'
 
 services:
   st2web:
-    image: ${ST2_IMAGE_REPO:-stackstorm/}st2web:${ST2_VERSION:-latest}
+    image: ${ST2_IMAGE_REPO:-docker.io/reghuinfra/}st2web_11:${ST2_VERSION:-latest}
     restart: on-failure
     environment:
       ST2_AUTH_URL: ${ST2_AUTH_URL:-http://st2auth:9100/}
@@ -244,14 +244,14 @@ services:
     volumes:
       - stackstorm-mongodb:/data/db
   rabbitmq:
-    image: rabbitmq:3.12
+    image: rabbitmq:3.8
     restart: on-failure
     networks:
       - private
     volumes:
       - stackstorm-rabbitmq:/var/lib/rabbitmq
   redis:
-    image: redis:7.2
+    image: redis:6.2
     restart: on-failure
     networks:
       - private
