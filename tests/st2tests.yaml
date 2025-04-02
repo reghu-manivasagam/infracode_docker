@@ -1,0 +1,35 @@
+version: '3'
+
+services:
+  st2test:
+    image: ${ST2_IMAGE_REPO:-stackstorm/}st2actionrunner:${ST2_VERSION:-latest}
+    environment:
+      ST2_AUTH_URL: ${ST2_AUTH_URL:-http://st2auth:9100/}
+      ST2_API_URL: ${ST2_API_URL:-http://st2api:9101/}
+      ST2_STREAM_URL: ${ST2_STREAM_URL:-http://st2stream:9102/}
+      ST2WEB_HTTPS: ${ST2WEB_HTTPS:-0}
+      ST2_AUTH_USERNAME: ${ST2_AUTH_USERNAME:-st2admin}
+      ST2_AUTH_PASSWORD: ${ST2_AUTH_PASSWORD:-Ch@ngeMe}
+    command:
+      - bash
+      - -ec
+      - |
+        apt update > /dev/null 2>&1
+        apt install bats -y > /dev/null 2>&1
+        mkdir /tools
+        git clone --config advice.detachedHead=false --depth 1 --branch v0.3.0 \
+          https://github.com/ztombol/bats-assert /tools/bats-assert > /dev/null 2>&1
+        git clone --config advice.detachedHead=false --depth 1 --branch v0.2.0 \
+          https://github.com/ztombol/bats-file /tools/bats-file > /dev/null 2>&1
+        git clone --config advice.detachedHead=false --depth 1 --branch v0.3.0 \
+          https://github.com/ztombol/bats-support /tools/bats-support > /dev/null 2>&1
+        bats /opt/stackstorm/st2tests.bat
+    volumes:
+      - ./st2tests.bat:/opt/stackstorm/st2tests.bat:ro
+    networks:
+      - st2-docker_private
+    stop_signal: SIGKILL
+
+networks:
+  st2-docker_private:
+    external: true
