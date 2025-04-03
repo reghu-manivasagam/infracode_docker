@@ -2,7 +2,7 @@ version: '3'
 
 services:
   st2web:
-    image: ${ST2_IMAGE_REPO:-docker.io/reghuinfra/}st2web_11:${ST2_VERSION:-latest}
+    image: ${ST2_IMAGE_REPO:-docker.io/reghuinfra/}st2web-6.0:${ST2_VERSION:-latest}
     restart: on-failure
     environment:
       ST2_AUTH_URL: ${ST2_AUTH_URL:-http://st2auth:9100/}
